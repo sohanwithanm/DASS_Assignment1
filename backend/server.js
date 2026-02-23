@@ -16,7 +16,11 @@ const app = express();
 
 // Middleware
 app.use(express.json()); // to recieve and send data in jsons (middleware)
-app.use(cors()); // to allow frontend-backend communication
+// to allow frontend-backend communication
+app.use(cors({
+  origin: ["http://localhost:5173", "https://your-vercel-link.vercel.app"],
+  credentials: true
+}));
 
 app.use('/api/auth', authRoutes); //authorization for email
 app.use('/api/events', eventRoutes);
