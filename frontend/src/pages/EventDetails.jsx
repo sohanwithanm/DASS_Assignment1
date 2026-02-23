@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 const EventDetails = () => {
@@ -24,7 +24,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5001/api/events/${id}`);
+        const { data } = await api.get('/events/${id}');
         setEvent(data);
         
         // Initialize custom form responses if applicable
@@ -37,7 +37,7 @@ const EventDetails = () => {
         }
         //Checking if already registered, by logged in user.
         if (token && role === 'Participant') {
-        const regRes = await axios.get(`http://localhost:5001/api/events/my-registrations`, {
+        const regRes = await api.get('/events/my-registrations', {
           headers: { Authorization: `Bearer ${token}` }
         });
         // Check if this event ID exists in their registrations
@@ -77,7 +77,7 @@ const EventDetails = () => {
         quantity: quantity
       };
 
-      await axios.post(`http://localhost:5001/api/events/${id}/register`, payload, {
+      await api.post('/events/${id}/register', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

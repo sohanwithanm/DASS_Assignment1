@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
 const CreateEvent = () => {
@@ -64,7 +64,7 @@ const CreateEvent = () => {
     }
 
     try {
-      await axios.post('http://localhost:5001/api/events', payload, {
+      await api.post('/events', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate('/dashboard');

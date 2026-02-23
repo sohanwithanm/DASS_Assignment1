@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate , Link} from 'react-router-dom';
 
 const Register = () => {
@@ -26,7 +26,7 @@ const Register = () => {
 
     try {
       // Make the POST request to port 5001
-      const response = await axios.post('http://localhost:5001/api/auth/register', formData);
+      const response = await api.post('/auth/register', formData);
       
       // If successful, save the token to the browser's local storage
       localStorage.setItem('token', response.data.token);

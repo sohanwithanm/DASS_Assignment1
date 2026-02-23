@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 const ResetPassword = () => {
@@ -25,7 +25,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const { data } = await axios.put(`http://localhost:5001/api/auth/resetpassword/${resettoken}`, { password });
+      const { data } = await api.put('/auth/resetpassword/${resettoken}', { password });
       setMessage(data.message || 'Password reset successful!');
       
       // Give them a moment to read the success message, then route to login

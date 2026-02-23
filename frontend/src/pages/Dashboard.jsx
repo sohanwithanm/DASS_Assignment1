@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -28,12 +28,12 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         if (role === 'Organizer') {
-          const { data } = await axios.get('http://localhost:5001/api/events/my-events', {
+          const { data } = await api.get('/events/my-events', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setOrganizerEvents(data);
         } else if (role === 'Participant') {
-          const { data } = await axios.get('http://localhost:5001/api/events/my-registrations', {
+          const { data } = await api.get('/events/my-registrations', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setParticipations(data);

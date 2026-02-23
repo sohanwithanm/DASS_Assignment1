@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate, Link} from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
 
   const fetchOrganizers = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5001/api/admin/organizers', {
+      const { data } = await api.get('/admin/organizers', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrganizers(data);
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     setError(''); setSuccess('');
     try {
-      await axios.post('http://localhost:5001/api/admin/organizers', formData, {
+      await api.post('/admin/organizers', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Organizer created successfully! Share the credentials with them.');
@@ -62,8 +62,8 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to completely remove this organizer?')) {
       try {
-        await axios.delete(`http://localhost:5001/api/admin/organizers/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
+        await api.delete('/admin/organizers/${id}', {
+          headers: { Authorization: 'Bearer ${token}' }
         });
         fetchOrganizers(); // Refresh the list
       } catch (err) {
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
     const newPass = window.prompt("Enter new temporary password for this Organizer:");
     if (!newPass) return;
     try {
-      await axios.put(`http://localhost:5001/api/admin/organizers/${id}/reset-password`, 
+      await api.put('/admin/organizers/${id}/reset-password', 
         { password: newPass }, { headers: { Authorization: `Bearer ${token}` } }
       );
       setSuccess('Password updated successfully.');

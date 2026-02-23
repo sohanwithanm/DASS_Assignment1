@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
 const OrganizersList = () => {
@@ -16,14 +16,14 @@ const OrganizersList = () => {
     const fetchData = async () => {
       try {
         // 1. Fetch the list of all organizers
-        const orgRes = await axios.get('http://localhost:5001/api/users/organizers', {
+        const orgRes = await api.get('/users/organizers', {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
         setOrganizers(orgRes.data);
 
         // 2. If logged in as a Participant, fetch their profile to get current followed clubs
         if (token && role === 'Participant') {
-          const profileRes = await axios.get('http://localhost:5001/api/users/profile', {
+          const profileRes = await api.get('/users/profile', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setFollowedIds(profileRes.data.followedOrganizers || []);
@@ -59,7 +59,7 @@ const OrganizersList = () => {
       setFollowedIds(updatedFollowedIds);
 
       // Send the updated array to the profile endpoint
-      await axios.put('http://localhost:5001/api/users/profile', 
+      await api.put('/users/profile', 
         { followedOrganizers: updatedFollowedIds },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -107,8 +107,8 @@ const OrganizersList = () => {
                     style={{ 
                       width: '100%', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', border: 'none',
                       backgroundColor: isFollowing ? '#f8f9fa' : '#007bff',
-                      color: isFollowing ? '#dc3545' : 'white',
-                      border: isFollowing ? '1px solid #dc3545' : '1px solid #007bff'
+                      color: isFollowing ? '#dc3545' : 'white'
+                    
                     }}
                   >
                     {isFollowing ? 'Unfollow' : 'Follow'}

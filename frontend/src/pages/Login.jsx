@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       // Use port 5001 as we established for the backend
-      const response = await axios.post('http://localhost:5001/api/auth/login', formData);
+      const response = await api.post('/auth/login', formData);
       
       // Store the token and user info for global access
       localStorage.setItem('token', response.data.token);

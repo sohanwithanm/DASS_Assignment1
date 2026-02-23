@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 
 const OrganizerDashboard = () => {
@@ -14,7 +14,7 @@ const OrganizerDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         // Hits the 'getOrganizerEvents' endpoint in your controller
-        const { data } = await axios.get('http://localhost:5001/api/events/my-events', {
+        const { data } = await api.get('/events/my-events', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setEvents(data);
@@ -31,7 +31,7 @@ const OrganizerDashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
       try {
-        await axios.delete(`http://localhost:5001/api/events/${id}`, {
+        await api.delete('/events/${id}', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setEvents(events.filter(e => e._id !== id)); // Remove from UI immediately

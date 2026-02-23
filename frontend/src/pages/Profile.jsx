@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 
 const Profile = () => {
@@ -28,7 +28,7 @@ const Profile = () => {
     const fetchProfileData = async () => {
       try {
         // 1. Fetch the user's profile
-        const profileRes = await axios.get('http://localhost:5001/api/users/profile', {
+        const profileRes = await api.get('/users/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -47,7 +47,7 @@ const Profile = () => {
 
         // 2. If Participant, fetch organizers to cross-reference the followed IDs with real names
         if (role === 'Participant') {
-          const orgsRes = await axios.get('http://localhost:5001/api/users/organizers');
+          const orgsRes = await api.get('/users/organizers');
           const followedIds = profileData.followedOrganizers || [];
           // Filter the organizers list to only show the ones this user follows
           const myClubs = orgsRes.data.filter(org => followedIds.includes(org._id));
@@ -65,7 +65,7 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:5001/api/users/profile', formData, {
+      await api.put('/users/profile', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Profile updated successfully!');
