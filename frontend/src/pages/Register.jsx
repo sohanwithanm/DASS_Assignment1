@@ -3,42 +3,39 @@ import api from '../api';
 import { useNavigate , Link} from 'react-router-dom';
 
 const Register = () => {
-  // 1. Setup State for our form fields
+  // setup
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'Participant' // Default to Participant
+    role: 'Participant' // default
   });
   
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // 2. Handle input changes dynamically
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 3. Submit the data to the backend
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevents page reload
-    setError(''); // Clear any previous errors
+    e.preventDefault(); // prevent page reload
+    setError('');
 
     try {
-      // Make the POST request to port 5001
       const response = await api.post('/auth/register', formData);
       
-      // If successful, save the token to the browser's local storage
+      // save the token to the browser's local storage
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userRole', response.data.role || 'Participant'); // Handy for routing later
+      localStorage.setItem('userRole', response.data.role || 'Participant');
       localStorage.setItem('userName', data.name);
       
       console.log('Success:', response.data);
       
-      // Redirect the user to the dashboard
+      //redirect to dashboard
       navigate('/dashboard');
     } catch (err) {
-      // If the backend sends an error (e.g., "User already exists"), display it
       setError(err.response?.data?.message || 'An error occurred during registration');
     }
   };

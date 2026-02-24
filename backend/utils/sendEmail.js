@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-  // 1. Create the transporter using Mailtrap credentials
+  // mailtrap credentials stored in .env
   const transporter = nodemailer.createTransport({
     host: process.env.MAILTRAP_HOST,
     port: process.env.MAILTRAP_PORT,
@@ -12,7 +12,6 @@ const sendEmail = async (options) => {
   });
 
 
-  // 2. Define the email options
   const mailOptions = {
     from: '"Felicity Event Platform" <noreply@felicity.com>',
     to: options.email,
@@ -21,7 +20,7 @@ const sendEmail = async (options) => {
   };
 
   console.log("Attempting to connect to Mailtrap with host:", process.env.MAILTRAP_HOST);
-  // 3. Send the email
+  //send email
   await transporter.sendMail(mailOptions);
 };
 

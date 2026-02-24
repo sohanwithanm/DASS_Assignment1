@@ -38,14 +38,14 @@ const eventSchema = new mongoose.Schema({
     required: true 
   },
 
-  // ORGANIZER REFERENCE
+  // for organizer
   organizerId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
     required: true 
   },
 
-  // NORMAL EVENT SPECIFIC ATTRIBUTES
+  // for normal events
   registrationFee: {
     type: Number,
     required: function() { return this.type === 'Normal'; }
@@ -58,10 +58,10 @@ const eventSchema = new mongoose.Schema({
     label: { type: String, required: true },
     fieldType: { type: String, enum: ['text', 'dropdown', 'checkbox', 'file'], required: true },
     isRequired: { type: Boolean, default: false },
-    options: { type: [String], default: [] } // Only populated if fieldType is 'dropdown'
+    options: { type: [String], default: [] }
   }],
 
-  // MERCHANDISE EVENT SPECIFIC ATTRIBUTES
+  // for merchandise events
   merchandiseDetails: {
     variants: { type: [String], default: [] }, // e.g., sizes, colors
     stockQuantity: { 
@@ -74,7 +74,7 @@ const eventSchema = new mongoose.Schema({
     }
   },
 
-  // STATUS TRACKING 
+  // status tracking
   status: {
     type: String,
     enum: ['Draft', 'Published', 'Ongoing', 'Completed', 'Closed'],

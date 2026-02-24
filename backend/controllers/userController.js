@@ -22,7 +22,6 @@ const getUserProfile = async (req, res) => {
         role: user.role,
         contactNumber: user.contactNumber || '',
         collegeName: user.collegeName || '',
-        // Add these requirement-specific fields [cite: 112, 139]
         areasOfInterest: user.areasOfInterest || [],
         followedOrganizers: user.followedOrganizers || [],
         organizationName: user.organizationName || '',
@@ -45,25 +44,20 @@ const updateUserProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
-      // 1. Common editable fields [cite: 112, 139]
+      //editable
       user.name = req.body.name || user.name;
       user.contactNumber = req.body.contactNumber || user.contactNumber;
 
-      // 2. Participant-specific fields [cite: 112]
       if (user.role === 'Participant') {
         user.collegeName = req.body.collegeName || user.collegeName;
-        // Handle onboarding preferences [cite: 49, 54]
         if (req.body.areasOfInterest) user.areasOfInterest = req.body.areasOfInterest;
         if (req.body.followedOrganizers) user.followedOrganizers = req.body.followedOrganizers;
       }
 
-      // 3. Organizer-specific fields 
       if (user.role === 'Organizer') {
         user.organizationName = req.body.organizationName || user.organizationName;
         user.description = req.body.description || user.description;
       }
-
-      // Note: Email remains non-editable as per requirements 
 
       const updatedUser = await user.save();
 
@@ -72,7 +66,6 @@ const updateUserProfile = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
-        // Return updated preferences so the frontend stays in sync
         areasOfInterest: updatedUser.areasOfInterest,
         followedOrganizers: updatedUser.followedOrganizers,
         organizationName: updatedUser.organizationName,
@@ -91,7 +84,7 @@ const updateUserProfile = async (req, res) => {
 // @access  Public (or Private for Participants)
 const getOrganizers = async (req, res) => {
   try {
-    // Fetch users with the Organizer role, returning only the necessary public fields
+    // fetch only organizer
     const organizers = await User.find({ role: 'Organizer' })
       .select('name category description contactEmail');
     

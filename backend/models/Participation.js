@@ -22,7 +22,7 @@ const participationSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Prevent a user from registering for the same event twice
+// user cant register for the same event twice
 participationSchema.index({ event: 1, participant: 1 }, { unique: true });
 
 module.exports = mongoose.model('Participation', participationSchema);

@@ -35,7 +35,6 @@ const EventParticipants = () => {
     // Define headers
     const headers = ["Name", "Email", "Contact", "College", "IIIT Student"];
     
-    // Map data to rows
     const rows = participants.map(p => [
       p.participant.name,
       p.participant.email,
@@ -44,10 +43,9 @@ const EventParticipants = () => {
       p.participant.isIIITStudent ? "Yes" : "No"
     ]);
 
-    // Create CSV string
     const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
     
-    // Create download link
+    // Create download link for participants csv
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

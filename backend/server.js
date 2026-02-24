@@ -11,18 +11,19 @@ const userRoutes = require('./routes/userRoutes');
 
 // to make sure .env file is populated correctly
 dotenv.config();
-
 const app = express();
 
-// Middleware
-app.use(express.json()); // to recieve and send data in jsons (middleware)
-// to allow frontend-backend communication
+// middleware
+// to recieve and send data in jsons (middleware)
+app.use(express.json()); 
+
+// cors is for frontend backend communication, we provide local for testing and vercel for hosting
 app.use(cors({
   origin: ["http://localhost:5173", "https://felicity-event-management-three.vercel.app"],
   credentials: true
 }));
 
-app.use('/api/auth', authRoutes); //authorization for email
+app.use('/api/auth', authRoutes); 
 app.use('/api/events', eventRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
@@ -35,7 +36,7 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        process.exit(1); // failed connection
+        process.exit(1); 
     }
 };
 
@@ -47,7 +48,6 @@ app.get('/', (req, res) => {
     res.send('felicity event manager api is running');
 });
 
-// starting the server: wither with own port or local machine.
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

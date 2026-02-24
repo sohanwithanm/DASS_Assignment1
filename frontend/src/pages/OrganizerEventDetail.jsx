@@ -24,7 +24,6 @@ const OrganizerEventDetail = () => {
         const eventRes = await api.get(`/events/${id}`);
         setEvent(eventRes.data);
 
-        // Only fetch participants if the event is no longer a draft
         if (eventRes.data.status !== 'Draft') {
           const partRes = await api.get(`/events/${id}/participants`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -46,7 +45,6 @@ const OrganizerEventDetail = () => {
       });
       setEvent(data);
       
-      // Fetch participants immediately after publishing just in case
       const partRes = await api.get(`/events/${id}/participants`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -101,7 +99,6 @@ const OrganizerEventDetail = () => {
   return (
     <div style={{ maxWidth: '1000px', margin: '40px auto', fontFamily: 'sans-serif', padding: '0 20px' }}>
       
-      {/* HEADER SECTION */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #eee', paddingBottom: '20px' }}>
         <div>
           <h2 style={{ margin: '0 0 10px 0' }}>{event.name}</h2>
@@ -111,12 +108,12 @@ const OrganizerEventDetail = () => {
         </div>
         
         <div style={{ display: 'flex', gap: '10px' }}>
-          {/* Edit is allowed for Drafts, Published, and Ongoing events */}
+          {/* edit is allowed for all events right now */}
           {['Draft', 'Published', 'Ongoing'].includes(event.status) && (
             <button onClick={() => navigate(`/edit-event/${event._id}`)} style={{ padding: '10px 15px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Edit</button>
           )}
           
-          {/* Delete and Publish are ONLY for Drafts */}
+          {/* delete and publish are for drafts */}
           {event.status === 'Draft' && (
             <>
               <button onClick={handleDelete} style={{ padding: '10px 15px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Delete</button>
@@ -128,7 +125,7 @@ const OrganizerEventDetail = () => {
 
       <div style={{ display: 'flex', gap: '20px', marginTop: '30px' }}>
         
-        {/* OVERVIEW SECTION (Always visible) */}
+        {/* overview */}
         <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #ddd' }}>
           <h3 style={{ marginTop: 0 }}>Overview</h3>
           <p><strong>Type:</strong> {event.type}</p>
@@ -138,7 +135,7 @@ const OrganizerEventDetail = () => {
           {event.type === 'Normal' && <p><strong>Fee:</strong> ₹{event.registrationFee}</p>}
         </div>
 
-        {/* ANALYTICS SECTION (Hidden for Drafts) */}
+        {/* analytics (not there for drafts) */}
         <div style={{ flex: 1, padding: '20px', backgroundColor: event.status === 'Draft' ? '#fff3cd' : '#e9ecef', borderRadius: '8px', border: '1px solid #ccc', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ marginTop: 0 }}>Live Analytics</h3>
           
@@ -164,7 +161,7 @@ const OrganizerEventDetail = () => {
         </div>
       </div>
 
-      {/* PARTICIPANT LIST SECTION (Hidden for Drafts) */}
+      {/* participation list (hidden for drafts) */}
       <div style={{ marginTop: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
           <h3 style={{ margin: 0 }}>Participant Roster</h3>

@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('userRole');
 
-  // Security Check & Data Fetching
+  // security check and data fetch
   useEffect(() => {
     if (!token || role !== 'Admin') {
       navigate('/login');
@@ -24,6 +24,7 @@ const AdminDashboard = () => {
     fetchOrganizers();
   }, [navigate, token, role]);
 
+  //fetch organisers used to refresh the list
   const fetchOrganizers = async () => {
     try {
       const { data } = await api.get('/admin/organizers', {
@@ -53,7 +54,7 @@ const AdminDashboard = () => {
       });
       setSuccess('Organizer created successfully! Share the credentials with them.');
       setFormData({ name: '', email: '', password: '', category: '', description: '', contactNumber: '' });
-      fetchOrganizers(); // Refresh the list
+      fetchOrganizers(); 
     } catch (err) {
       setError(err.response?.data?.message || 'Error creating organizer');
     }
@@ -65,7 +66,7 @@ const AdminDashboard = () => {
         await api.delete(`/admin/organizers/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        fetchOrganizers(); // Refresh the list
+        fetchOrganizers(); 
       } catch (err) {
         setError('Failed to delete organizer.');
       }
@@ -89,7 +90,7 @@ const AdminDashboard = () => {
     <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       <h2>Admin Control Panel</h2>
       
-      {/* Navigation requirement specific to Admin */}
+      {/* admin specific nav */}
       <nav style={{ display: 'flex', gap: '20px', borderBottom: '2px solid #ddd', marginBottom: '30px', paddingBottom: '10px' }}>
         <button 
           onClick={() => setActiveTab('manage')} 
@@ -110,7 +111,6 @@ const AdminDashboard = () => {
 
       {activeTab === 'manage' ? (
         <div style={{ display: 'flex', gap: '40px' }}>
-          {/* CREATE ORGANIZER FORM (Requirement 11.2) */}
           <div style={{ flex: '1', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#fff' }}>
             <h3>Add New Organizer</h3>
             <form onSubmit={handleCreateOrganizer} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
             </form>
           </div>
 
-          {/* ORGANIZER LIST (Requirement 11.2) */}
+          {/* organizer list */}
           <div style={{ flex: '1' }}>
             <h3>Current Organizers</h3>
             {organizers.length === 0 ? <p>No organizers found.</p> : (
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       ) : (
-        /* PASSWORD RESET TAB (Requirement 11.2) */
+        /* password reset */
         <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
           <h3>Organizer Password Resets</h3>
           <p style={{ color: '#666', marginBottom: '20px' }}>Admin manually handles reset requests for club accounts.</p>

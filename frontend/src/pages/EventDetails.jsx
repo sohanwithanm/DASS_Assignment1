@@ -27,7 +27,6 @@ const EventDetails = () => {
         const { data } = await api.get(`/events/${id}`);
         setEvent(data);
         
-        // Initialize custom form responses if applicable
         if (data.type === 'Normal' && data.customFormFields) {
           const initialResponses = {};
           data.customFormFields.forEach(field => {
@@ -35,12 +34,12 @@ const EventDetails = () => {
           });
           setFormResponses(initialResponses);
         }
-        //Checking if already registered, by logged in user.
+        // checking if already registered, by logged in user.
         if (token && role === 'Participant') {
         const regRes = await api.get('/events/my-registrations', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        // Check if this event ID exists in their registrations
+        // check if this event ID exists in their registrations
         const alreadyIn = regRes.data.some(reg => reg.event._id === id);
         setIsRegistered(alreadyIn);
       }
@@ -69,8 +68,6 @@ const EventDetails = () => {
     setSuccess('');
 
     try {
-      // For now, hitting the basic registration endpoint. 
-      // If you update your backend Participation model later, you can pass formResponses/selectedVariant here.
       const payload = {
         formResponses,
         variant: selectedVariant,
@@ -95,12 +92,11 @@ const EventDetails = () => {
 
   const isPastDeadline = new Date() > new Date(event.registrationDeadline);
   
-  // Disable button if past deadline, or if it's a participant but they haven't selected required fields
   const isButtonDisabled = 
     isPastDeadline || 
     isSubmitting || 
     (event.type === 'Merchandise' && !selectedVariant) ||
-    (role && role !== 'Participant'); // Only participants can register
+    (role && role !== 'Participant'); 
 
   const validateForm = () => {
     if (event.type === 'Normal' && event.customFormFields) {
@@ -123,7 +119,6 @@ const EventDetails = () => {
 
       <div style={{ padding: '30px', border: '1px solid #e0e0e0', borderRadius: '12px', backgroundColor: '#fff', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
         
-        {/* HEADER */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #f0f0f0', paddingBottom: '20px', marginBottom: '20px' }}>
           <div>
             <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>{event.name}</h1>
@@ -134,7 +129,7 @@ const EventDetails = () => {
           </span>
         </div>
 
-        {/* DETAILS GRID */}
+        {/* details grid (card) */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px', backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
           <div>
             <p style={{ margin: '5px 0' }}><strong>Eligibility:</strong> {event.eligibility}</p>
@@ -157,7 +152,6 @@ const EventDetails = () => {
           <p style={{ lineHeight: '1.6', color: '#444', whiteSpace: 'pre-wrap' }}>{event.description}</p>
         </div>
 
-        {/* REGISTRATION SECTION */}
         <div style={{ borderTop: '2px solid #f0f0f0', paddingTop: '20px' }}>
           <h3>Registration</h3>
           
@@ -175,7 +169,7 @@ const EventDetails = () => {
           ) : (
             <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '8px', border: '1px solid #ddd' }}>
               
-              {/* Dynamic Forms for Normal Events */}
+              {/* dynamic Forms for normal events */}
               {event.type === 'Normal' && event.customFormFields && event.customFormFields.length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
                   <h4 style={{ marginTop: 0 }}>Required Information</h4>
@@ -200,7 +194,6 @@ const EventDetails = () => {
                 </div>
               )}
 
-              {/* Variant selection for Merchandise */}
               {event.type === 'Merchandise' && event.merchandiseDetails && event.merchandiseDetails.variants?.length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Select Variant/Size: <span style={{ color: 'red' }}>*</span></label>

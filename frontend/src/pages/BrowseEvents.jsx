@@ -8,24 +8,21 @@ const BrowseEvents = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Filter States
+  // filter
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
   const [eligibility, setEligibility] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [trending, setTrending] = useState(false);
-  
-  // Note: For 'Followed Clubs', you would typically fetch the user's followed clubs from their profile
-  // and pass those IDs here. We'll leave the state ready for it.
   const [showFollowedOnly, setShowFollowedOnly] = useState(false);
 
-  // Fetch events whenever filters change
+  // fetch events whenever filters change
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        // Build the query string dynamically based on active filters
+        // build the query dynamically based on filters
         const params = new URLSearchParams();
         if (search) params.append('search', search);
         if (type) params.append('type', type);
@@ -33,9 +30,8 @@ const BrowseEvents = () => {
         if (startDate) params.append('startDate', startDate);
         if (endDate) params.append('endDate', endDate);
         if (trending) params.append('trending', 'true');
-        
-        // If showFollowedOnly is true, you would append the comma-separated IDs here
-        // if (showFollowedOnly) params.append('followedOrganizers', 'id1,id2');
+
+        // comma separated IDs
         if (showFollowedOnly && followedIds.length > 0) params.append('followedOrganizers', followedIds.join(','));
 
         const { data } = await api.get(`/events?${params.toString()}`);
@@ -47,7 +43,7 @@ const BrowseEvents = () => {
       }
     };
 
-    // Add a slight delay (debounce) to prevent spamming the API while typing
+    // prevent spamming API with delay
     const delayDebounceFn = setTimeout(() => {
       fetchEvents();
     }, 300);
@@ -63,7 +59,6 @@ const BrowseEvents = () => {
   return (
     <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px', fontFamily: 'sans-serif', display: 'flex', gap: '30px' }}>
       
-      {/* --- SIDEBAR: FILTERS --- */}
       <div style={{ width: '280px', flexShrink: 0, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #ddd', height: 'fit-content' }}>
         <h3 style={{ marginTop: 0, borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>Filters</h3>
         
@@ -102,8 +97,7 @@ const BrowseEvents = () => {
           Clear All Filters
         </button>
       </div>
-
-      {/* --- MAIN CONTENT: SEARCH & FEED --- */}
+      
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
           <input 

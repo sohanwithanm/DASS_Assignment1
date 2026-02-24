@@ -1,26 +1,23 @@
 const Event = require('../models/Event');
-const User = require('../models/User'); // Required to search by Organizer Name
+const User = require('../models/User'); // for organizer name search?
 
 // @desc    Create a new event
 // @route   POST /api/events
 // @access  Private (Organizer Only)
 const createEvent = async (req, res) => {
   try {
-    // 1. Role-Based Access Control (RBAC)
-    // The protect middleware gives us access to req.user
+    // protect middleware gives us access to req.user
     if (req.user.role !== 'Organizer') {
       return res.status(403).json({ message: 'Forbidden: Only Organizers can create events.' });
     }
 
-    // 2. Extract event details from the request body
+    // extract event details
     const {
       name, description, type, eligibility, registrationDeadline,
       startDate, endDate, registrationLimit, registrationFee,
       eventTags, merchandiseDetails
     } = req.body;
 
-    // 3. Create the Event in the database
-    // Notice how organizerId is securely taken from req.user._id, NOT the request body
     const event = await Event.create({
       name,
       description,
@@ -34,10 +31,9 @@ const createEvent = async (req, res) => {
       registrationFee,
       eventTags,
       merchandiseDetails,
-      status: 'Draft' // Section 8.1: New events start as Drafts
+      status: 'Draft' 
     });
 
-    // 4. Send success response
     res.status(201).json(event);
 
   } catch (error) {
@@ -59,12 +55,12 @@ const registerForEvent = async (req, res) => {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    // 1. Check if user is a Participant
+    //checks
+
     if (req.user.role !== 'Participant') {
       return res.status(403).json({ message: 'Only participants can register for events' });
     }
 
-    // Check eligibility
     if (event.eligibility === 'IIIT Only' && !req.user.isIIITStudent) {
       return res.status(403).json({ message: 'This event is restricted to IIIT Students only.' });
     }
@@ -72,18 +68,16 @@ const registerForEvent = async (req, res) => {
       return res.status(403).json({ message: 'This event is for external participants only.' });
     }
 
-    // Check Deadline
     if (new Date() > new Date(event.registrationDeadline)) {
       return res.status(400).json({ message: 'Registration deadline has passed' });
     }
 
-    // 3. Check Capacity
     const currentRegistrations = await Participation.countDocuments({ event: req.params.id });
     if (currentRegistrations >= event.registrationLimit) {
       return res.status(400).json({ message: 'Event is full' });
     }
 
-    // 4. Create Participation
+    // create participation
     const participation = await Participation.create({
       event: req.params.id,
       participant: req.user._id
@@ -113,44 +107,41 @@ const getEvents = async (req, res) => {
       trending, followedOrganizers 
     } = req.query;
 
-    // Default: Only show Published or Ongoing events
+
     let query = { 
       status: { $in: ['Published', 'Ongoing'] } 
     };
 
-    // 1. Partial Search on Event Name OR Organizer Name
+    // partial seearch
     if (search) {
-      // Find organizers matching the search term
       const matchingOrganizers = await User.find({
         role: 'Organizer',
-        name: { $regex: search, $options: 'i' } // 'i' makes it case-insensitive
+        name: { $regex: search, $options: 'i' } // i makes it case insensitive
 
       }).select('_id');
       
       const organizerIds = matchingOrganizers.map(org => org._id);
-      // Event matches name OR organizer matches name for fuzzy search
+      // fuzzy search
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
         { organizerId: { $in: organizerIds } }
       ];
     }
 
-    // 2. Standard Filters
+    // filters
     if (type) query.type = type;
     if (eligibility) query.eligibility = { $regex: eligibility, $options: 'i' };
 
-    // 3. Date Range Filter
     if (startDate || endDate) {
       query.startDate = {};
       if (startDate) query.startDate.$gte = new Date(startDate);
-      if (endDate) query.startDate.$lte = new Date(endDate); // Finds events starting before endDate
+      if (endDate) query.startDate.$lte = new Date(endDate); 
     }
 
-    // 4. Followed Clubs Filter (Frontend will send a comma-separated list of IDs)
+    // list of comma separated IDs
     if (followedOrganizers) {
       const orgIds = followedOrganizers.split(',');
       
-      // If a search query already created an $or array, we must combine them safely using $and
       if (query.$or) {
         query = {
           $and: [
@@ -164,20 +155,19 @@ const getEvents = async (req, res) => {
       }
     }
 
-    // 5. Apply Trending Logic or Standard Sorting
     let queryBuilder;
     
     if (trending === 'true') {
-      // Top 5/24h logic: Events created in the last 24 hours, limited to 5
+      // top 5/24h logic
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       query.createdAt = { $gte: oneDayAgo };
       
       queryBuilder = Event.find(query)
         .populate('organizerId', 'name category')
-        .sort({ registrationLimit: -1, createdAt: -1 }) // Sort by biggest events created recently
+        .sort({ registrationLimit: -1, createdAt: -1 }) //sort desc
         .limit(5);
     } else {
-      // Standard feed: Sort by closest upcoming events
+      // standard: sort by time
       queryBuilder = Event.find(query)
         .populate('organizerId', 'name category')
         .sort({ startDate: 1 });
@@ -218,7 +208,6 @@ const getOrganizerEvents = async (req, res) => {
       return res.status(403).json({ message: 'Access denied. Organizers only.' });
     }
 
-    // Find all events where the organizerId matches the logged-in user
     const events = await Event.find({ organizerId: req.user._id }).sort({ createdAt: -1 });
     res.json(events);
   } catch (error) {
@@ -266,12 +255,10 @@ const getEventParticipants = async (req, res) => {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    // SECURITY CHECK: Only the event owner can see the participant list
     if (event.organizerId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: 'Not authorized to view these participants' });
     }
 
-    // Fetch from the Participation collection and populate the Participant's details
     const participants = await Participation.find({ event: req.params.id })
       .populate('participant', 'name email contactNumber collegeName isIIITStudent');
 
@@ -290,7 +277,6 @@ const deleteEvent = async (req, res) => {
 
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    // SECURITY CHECK: Make sure the logged-in organizer owns this event
     if (event.organizerId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: 'Not authorized to delete this event' });
     }
@@ -311,7 +297,6 @@ const getMyRegistrations = async (req, res) => {
       return res.status(403).json({ message: 'Access denied. Participants only.' });
     }
 
-    // Find participations and populate the event and organizer details
     const participations = await Participation.find({ participant: req.user._id })
       .populate({
         path: 'event',

@@ -5,18 +5,19 @@ const bcrypt = require('bcryptjs');
 // @route   POST /api/admin/organizers
 const createOrganizer = async (req, res) => {
   try {
-    // Ensure 'category' is included here
+    
     const { name, email, password, category, description, contactNumber } = req.body;
 
     if (req.user.role !== 'Admin') {
       return res.status(403).json({ message: 'Not authorized as an admin' });
     }
 
-    // Check if the field is actually arriving
+    // Check for category arrival (error checking)
     if (!category) {
       return res.status(400).json({ message: 'Category is required for Organizers' });
     }
 
+    //Same encryption as auth to ensure smooth flow
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -25,7 +26,7 @@ const createOrganizer = async (req, res) => {
       email,
       password: hashedPassword,
       role: 'Organizer',
-      category, // Must be passed to the model
+      category, 
       description,
       contactNumber,
       isApproved: true

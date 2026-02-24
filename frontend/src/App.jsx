@@ -59,7 +59,7 @@ function App() {
 
         {token ? (
           <>
-            {/* Contextual Dashboard Link based on Role */}
+            {/* dashboard based on roles */}
             {role === 'Admin' && (
               <>
                 <Link to="/admin">Dashboard</Link>
@@ -104,7 +104,6 @@ function App() {
         <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
         <Route path="/organizers" element={<OrganizersList />} />
 
-        {/* Role based */}
 
         {/* Participant Dashboard */}
         <Route path="/dashboard" element={

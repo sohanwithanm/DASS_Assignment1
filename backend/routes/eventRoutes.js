@@ -15,17 +15,17 @@ const {
 const { protect } = require('../middleware/authMiddleware');
 
 
-// Public events list
+// public route
 router.get('/', getEvents);
 
 router.get('/my-events', protect, getOrganizerEvents);
 router.get('/my-registrations', protect, getMyRegistrations);
 
-//Public search for single event
+//single event search
 router.get('/:id', getEventById);
 
 // Route: POST /api/events
-// Protected Routes
+// protected routes
 router.post('/', protect, createEvent);
 router.put('/:id', protect, updateEvent); 
 router.post('/:id/register', protect, registerForEvent);

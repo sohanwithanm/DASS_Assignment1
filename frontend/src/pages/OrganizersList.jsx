@@ -15,13 +15,11 @@ const OrganizersList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Fetch the list of all organizers
         const orgRes = await api.get('/users/organizers', {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
         setOrganizers(orgRes.data);
 
-        // 2. If logged in as a Participant, fetch their profile to get current followed clubs
         if (token && role === 'Participant') {
           const profileRes = await api.get('/users/profile', {
             headers: { Authorization: `Bearer ${token}` }
@@ -45,17 +43,16 @@ const OrganizersList = () => {
     }
 
     try {
-      // Determine if we are following or unfollowing
       const isCurrentlyFollowing = followedIds.includes(organizerId);
       
       let updatedFollowedIds;
       if (isCurrentlyFollowing) {
-        updatedFollowedIds = followedIds.filter(id => id !== organizerId); // Remove ID
+        updatedFollowedIds = followedIds.filter(id => id !== organizerId); 
       } else {
-        updatedFollowedIds = [...followedIds, organizerId]; // Add ID
+        updatedFollowedIds = [...followedIds, organizerId]; // add id
       }
 
-      // Optimistically update the UI so it feels instant
+      // update ui?
       setFollowedIds(updatedFollowedIds);
 
       // Send the updated array to the profile endpoint
@@ -66,7 +63,6 @@ const OrganizersList = () => {
 
     } catch (err) {
       alert("An error occurred while updating your follow preferences.");
-      // If it fails, you might want to revert the optimistic UI update here
     }
   };
 

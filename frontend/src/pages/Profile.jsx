@@ -14,7 +14,7 @@ const Profile = () => {
     areasOfInterest: []
   });
   const [interestInput, setInterestInput] = useState('');
-  const [followedClubs, setFollowedClubs] = useState([]); // New state to hold followed clubs
+  const [followedClubs, setFollowedClubs] = useState([]);
   const [message, setMessage] = useState('');
   
   const token = localStorage.getItem('token');
@@ -27,7 +27,6 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // 1. Fetch the user's profile
         const profileRes = await api.get('/users/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -45,11 +44,9 @@ const Profile = () => {
           areasOfInterest: profileData.areasOfInterest || []
         });
 
-        // 2. If Participant, fetch organizers to cross-reference the followed IDs with real names
         if (role === 'Participant') {
           const orgsRes = await api.get('/users/organizers');
           const followedIds = profileData.followedOrganizers || [];
-          // Filter the organizers list to only show the ones this user follows
           const myClubs = orgsRes.data.filter(org => followedIds.includes(org._id));
           setFollowedClubs(myClubs);
         }
@@ -93,7 +90,6 @@ const Profile = () => {
       
       <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
-        {/* NON-EDITABLE SECTION [cite: 113] */}
         <div style={{ display: 'flex', gap: '15px' }}>
           <div style={{ flex: 1 }}>
             <label style={{ fontWeight: 'bold', fontSize: '14px' }}>Email Address:</label>
@@ -112,7 +108,6 @@ const Profile = () => {
           )}
         </div>
 
-        {/* EDITABLE FIELDS [cite: 112] */}
         <div style={{ display: 'flex', gap: '15px' }}>
           <div style={{ flex: 1 }}>
             <label style={{ fontWeight: 'bold', fontSize: '14px' }}>Full Name:</label>

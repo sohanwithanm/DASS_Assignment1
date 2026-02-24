@@ -13,7 +13,6 @@ const OrganizerDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Hits the 'getOrganizerEvents' endpoint in your controller
         const { data } = await api.get('/events/my-events', {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -34,7 +33,7 @@ const OrganizerDashboard = () => {
         await api.delete(`/events/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setEvents(events.filter(e => e._id !== id)); // Remove from UI immediately
+        setEvents(events.filter(e => e._id !== id));
       } catch (err) {
         alert('Failed to delete event.');
       }
@@ -46,7 +45,6 @@ const OrganizerDashboard = () => {
   return (
     <div style={{ maxWidth: '1100px', margin: '40px auto', padding: '0 20px', fontFamily: 'sans-serif' }}>
       
-      {/* HEADER SECTION */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '2px solid #eee', paddingBottom: '20px' }}>
         <div>
           <h1 style={{ margin: 0, color: '#333' }}>Organizer Dashboard</h1>
@@ -59,7 +57,7 @@ const OrganizerDashboard = () => {
 
       {error && <div style={{ color: 'red', padding: '15px', backgroundColor: '#ffe6e6', borderRadius: '4px', marginBottom: '20px' }}>{error}</div>}
 
-      {/* STATS OVERVIEW */}
+      {/* stats overview */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         <div style={{ padding: '20px', backgroundColor: '#f8f9fa', border: '1px solid #ddd', borderRadius: '8px', textAlign: 'center' }}>
           <h3 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#888', textTransform: 'uppercase' }}>Total Events</h3>
@@ -73,7 +71,7 @@ const OrganizerDashboard = () => {
         </div>
       </div>
 
-      {/* EVENT MANAGEMENT TABLE */}
+      {/* event management */}
       <div style={{ backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead style={{ backgroundColor: '#f4f4f4' }}>

@@ -24,7 +24,6 @@ const Dashboard = () => {
       return;
     }
 
-    // 2. Fetch Data based on Role
     const fetchDashboardData = async () => {
       try {
         if (role === 'Organizer') {
@@ -50,7 +49,7 @@ const Dashboard = () => {
   const filterParticipations = () => {
     const now = new Date();
     return participations.filter(p => {
-      if (!p.event) return false; // Safety check in case an event was deleted
+      if (!p.event) return false; 
       
       const eventDate = new Date(p.event.startDate);
       const isUpcoming = eventDate > now && p.event.status !== 'Completed' && p.event.status !== 'Cancelled';
@@ -69,8 +68,8 @@ const Dashboard = () => {
   const displayedParticipations = filterParticipations();
 
   const handleLogout = () => {
-    localStorage.clear(); // Wipe the token and user data
-    navigate('/login');   // Send them to login
+    localStorage.clear(); 
+    navigate('/login');
   };
 
   return (
@@ -78,12 +77,10 @@ const Dashboard = () => {
       <h1 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px' }}>Welcome, {userName}!</h1>
       {error && <div style={{ color: 'red', marginBottom: '15px' }}>{error}</div>}
 
-      {/* --- PARTICIPANT VIEW --- */}
       {role === 'Participant' && (
         <div>
           <h2>My Events Dashboard</h2>
           
-          {/* Tabs */}
           <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
             {['Upcoming', 'Normal', 'Merchandise', 'Completed', 'Cancelled'].map(tab => (
               <button 
@@ -100,7 +97,6 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {/* Records List */}
           {displayedParticipations.length === 0 ? (
             <p style={{ color: '#666', fontStyle: 'italic' }}>No records found for '{activeTab}'.</p>
           ) : (
@@ -136,10 +132,8 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* --- ORGANIZER VIEW (Keep your existing Organizer code here) --- */}
       {role === 'Organizer' && (
         <div>
-           {/* Your existing Organizer Dashboard UI goes here */}
            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3>Events You Manage</h3>
             <button 

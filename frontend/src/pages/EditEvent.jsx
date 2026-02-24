@@ -53,7 +53,6 @@ const EditEvent = () => {
         });
 
         if (data.customFormFields) {
-          // Convert database options array back to comma-separated string for editing
           const loadedFields = data.customFormFields.map(field => ({
             ...field,
             options: field.options ? field.options.join(', ') : ''
@@ -125,7 +124,7 @@ const EditEvent = () => {
     }
   };
 
-  // --- NEW FUNCTION: CLOSE REGISTRATIONS ---
+  // close registrations
   const handleCloseRegistrations = async () => {
     if (window.confirm("Are you sure you want to close registrations early? This cannot be undone.")) {
       try {
@@ -139,11 +138,11 @@ const EditEvent = () => {
     }
   };
 
-  // Logic to determine if fields should be locked
+  // locked fields
   const isLocked = eventStatus !== 'Draft';
   const lockedInputStyle = { padding: '10px', backgroundColor: '#e9ecef', cursor: 'not-allowed', color: '#6c757d', border: '1px solid #ccc' };
   const openInputStyle = { padding: '10px', backgroundColor: 'white', border: '1px solid #ccc' };
-  const highlightStyle = { padding: '10px', border: '2px solid #80bdff', backgroundColor: 'white' }; // Always editable
+  const highlightStyle = { padding: '10px', border: '2px solid #80bdff', backgroundColor: 'white' };
 
   return (
     <div style={{ maxWidth: '750px', margin: '40px auto', padding: '20px', fontFamily: 'sans-serif' }}>
@@ -160,7 +159,6 @@ const EditEvent = () => {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={isLocked} required style={isLocked ? lockedInputStyle : openInputStyle} />
         
-        {/* Description is ALWAYS editable */}
         <textarea name="description" value={formData.description} onChange={handleChange} required style={{ minHeight: '80px', ...(isLocked ? highlightStyle : openInputStyle) }} />
         
         <select name="type" value={formData.type} onChange={handleChange} disabled={isLocked} style={{ ...(isLocked ? lockedInputStyle : openInputStyle), fontWeight: 'bold' }}>
@@ -182,14 +180,12 @@ const EditEvent = () => {
         </label>
         
         <div style={{ display: 'flex', gap: '10px' }}>
-          {/* Deadline is ALWAYS editable */}
           <div style={{ flex: 1 }}><label>Reg Deadline:</label><input type="datetime-local" name="registrationDeadline" value={formData.registrationDeadline} onChange={handleChange} required style={{ width: '100%', boxSizing: 'border-box', ...(isLocked ? highlightStyle : openInputStyle) }} /></div>
           
           <div style={{ flex: 1 }}><label>Start Date:</label><input type="datetime-local" name="startDate" value={formData.startDate} onChange={handleChange} disabled={isLocked} required style={{ width: '100%', boxSizing: 'border-box', ...(isLocked ? lockedInputStyle : openInputStyle) }} /></div>
           <div style={{ flex: 1 }}><label>End Date:</label><input type="datetime-local" name="endDate" value={formData.endDate} onChange={handleChange} disabled={isLocked} required style={{ width: '100%', boxSizing: 'border-box', ...(isLocked ? lockedInputStyle : openInputStyle) }} /></div>
         </div>
         
-        {/* Limit is ALWAYS editable */}
         <label>Registration Capacity:</label>
         <input type="number" name="registrationLimit" value={formData.registrationLimit} onChange={handleChange} required style={{ ...(isLocked ? highlightStyle : openInputStyle) }} />
 
@@ -242,7 +238,6 @@ const EditEvent = () => {
             Save Changes
           </button>
           
-          {/* Close Registrations Button - Only shows if it's currently Published or Ongoing */}
           {['Published', 'Ongoing'].includes(eventStatus) && (
             <button type="button" onClick={handleCloseRegistrations} style={{ flex: 1, padding: '12px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold' }}>
               Close Registrations

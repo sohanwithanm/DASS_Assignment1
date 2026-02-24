@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     try {
       const { data } = await api.post('/auth/forgotpassword', { email });
       setMessage(data.message || 'Email sent successfully! Check your inbox.');
-      setEmail(''); // clear the input
+      setEmail(''); 
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to send reset email.');
     } finally {

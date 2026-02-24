@@ -14,8 +14,6 @@ const userSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function(v) {
-        // If the user intends to be an IIIT Participant, we enforce domain logic
-        // Section 4.1.1: Must register using IIIT-issued email ID only
         if (this.role === 'Participant' && this.isIIITStudent) {
             return v.endsWith('@students.iiit.ac.in') || v.endsWith('@research.iiit.ac.in');
         }
@@ -44,14 +42,12 @@ const userSchema = new mongoose.Schema({
     default: false
   },
 
-  // Therefore, self-registered users are always Participants and 'isApproved' is likely implicit or true.
-  // Organizers created by Admin are approved by default.
   isApproved: {
     type: Boolean,
     default: true 
   },
 
-  // These are not required at Registration (Section 4.1), but are editable later.
+  // editables
   contactNumber: {
     type: String,
     trim: true,
@@ -64,9 +60,9 @@ const userSchema = new mongoose.Schema({
     default: ''
   },
 
-  // These are required only if the user is an Organizer.
+  // for organizers
   category: {
-    type: String, // e.g., technical, cultural, etc.
+    type: String, // technical, cultural...
     required: function() { return this.role === 'Organizer'; }
   },
   

@@ -19,13 +19,13 @@ const CreateEvent = () => {
     variants: '', stockQuantity: '', purchaseLimitPerParticipant: 1
   });
 
-  // State for Dynamic Form Builder
+  // Dynamic form builder
   const [customFields, setCustomFields] = useState([]);
   const [error, setError] = useState('');
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Dynamic Form Handlers
+  // dynamic form handler
   const addCustomField = () => setCustomFields([...customFields, { label: '', fieldType: 'text', isRequired: false, options: '' }]);
   const removeCustomField = (index) => setCustomFields(customFields.filter((_, i) => i !== index));
   const updateCustomField = (index, key, value) => {
@@ -48,7 +48,6 @@ const CreateEvent = () => {
       payload.registrationFee = Number(formData.registrationFee);
       payload.eventTags = formData.eventTags.split(',').map(t => t.trim()).filter(Boolean);
       
-      // Attach formatted custom fields
       payload.customFormFields = customFields.map(field => ({
         label: field.label,
         fieldType: field.fieldType,
@@ -106,7 +105,6 @@ const CreateEvent = () => {
         </div>
         <input type="number" name="registrationLimit" placeholder="Registration Limit" value={formData.registrationLimit} onChange={handleChange} required style={{ padding: '10px' }} />
 
-        {/* NORMAL EVENT SPECIFIC */}
         {formData.type === 'Normal' && (
           <div style={{ padding: '15px', borderRadius: '5px'}}>
             <h4 style={{ margin: '0 0 10px 0' }}>Normal Event Details</h4>
@@ -138,7 +136,6 @@ const CreateEvent = () => {
           </div>
         )}
 
-        {/* MERCHANDISE EVENT SPECIFIC */}
         {formData.type === 'Merchandise' && (
           <div style={{ padding: '15px', borderRadius: '5px'}}>
             <h4 style={{ margin: '0 0 10px 0' }}>Merchandise Details</h4>

@@ -3,7 +3,7 @@ import api from '../api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
 const ResetPassword = () => {
-  const { resettoken } = useParams(); // Grabs the token from the URL
+  const { resettoken } = useParams();
   const navigate = useNavigate();
 
   const [password, setPassword] = useState('');
@@ -28,7 +28,7 @@ const ResetPassword = () => {
       const { data } = await api.put(`/auth/resetpassword/${resettoken}`, { password });
       setMessage(data.message || 'Password reset successful!');
       
-      // Give them a moment to read the success message, then route to login
+      //set buffer to read message
       setTimeout(() => {
         navigate('/login');
       }, 3000);

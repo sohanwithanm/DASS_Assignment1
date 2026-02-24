@@ -16,10 +16,9 @@ const Login = () => {
     setError('');
 
     try {
-      // Use port 5001 as we established for the backend
       const response = await api.post('/auth/login', formData);
       
-      // Store the token and user info for global access
+      // store the token and user info for global access
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userRole', response.data.role);
       localStorage.setItem('userName', response.data.name);
