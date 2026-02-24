@@ -5,8 +5,8 @@ const isLocal = window.location.hostname === 'localhost';
 
 // Set the Base URL accordingly
 const API_BASE_URL = isLocal 
-  ? 'http://localhost:5001/api' 
-  : 'https://felicity-event-management-oqqg.onrender.com/api'; // Render backend
+  ? `http://localhost:5001/api` 
+  : `https://felicity-event-management-oqqg.onrender.com/api`; // Render backend
   
 
 // Create an Axios instance with the base URL and credentials

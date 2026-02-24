@@ -12,13 +12,13 @@ const EventParticipants = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await api.get('/events/${id}/participants', {
+        const res = await api.get(`/events/${id}/participants`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setParticipants(res.data);
         
         // Also fetch event name for the title
-        const eventRes = await api.get('/events/${id}');
+        const eventRes = await api.get(`/events/${id}`);
         setEventName(eventRes.data.name);
       } catch (err) {
         console.error("Error fetching participants", err);

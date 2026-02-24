@@ -31,7 +31,7 @@ const OrganizerDashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
       try {
-        await api.delete('/events/${id}', {
+        await api.delete(`/events/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setEvents(events.filter(e => e._id !== id)); // Remove from UI immediately

@@ -38,7 +38,7 @@ const BrowseEvents = () => {
         // if (showFollowedOnly) params.append('followedOrganizers', 'id1,id2');
         if (showFollowedOnly && followedIds.length > 0) params.append('followedOrganizers', followedIds.join(','));
 
-        const { data } = await api.get('/events?${params.toString()}');
+        const { data } = await api.get(`/events?${params.toString()}`);
         setEvents(data);
       } catch (err) {
         setError('Failed to fetch events.');

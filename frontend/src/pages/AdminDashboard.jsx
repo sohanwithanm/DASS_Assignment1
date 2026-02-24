@@ -62,8 +62,8 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to completely remove this organizer?')) {
       try {
-        await api.delete('/admin/organizers/${id}', {
-          headers: { Authorization: 'Bearer ${token}' }
+        await api.delete(`/admin/organizers/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
         fetchOrganizers(); // Refresh the list
       } catch (err) {
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
     const newPass = window.prompt("Enter new temporary password for this Organizer:");
     if (!newPass) return;
     try {
-      await api.put('/admin/organizers/${id}/reset-password', 
+      await api.put(`/admin/organizers/${id}/reset-password`, 
         { password: newPass }, { headers: { Authorization: `Bearer ${token}` } }
       );
       setSuccess('Password updated successfully.');

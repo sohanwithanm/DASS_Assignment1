@@ -21,12 +21,12 @@ const OrganizerEventDetail = () => {
 
     const fetchDetails = async () => {
       try {
-        const eventRes = await api.get('/events/${id}');
+        const eventRes = await api.get(`/events/${id}`);
         setEvent(eventRes.data);
 
         // Only fetch participants if the event is no longer a draft
         if (eventRes.data.status !== 'Draft') {
-          const partRes = await api.get('/events/${id}/participants', {
+          const partRes = await api.get(`/events/${id}/participants`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setParticipants(partRes.data);
@@ -41,13 +41,13 @@ const OrganizerEventDetail = () => {
 
   const handlePublish = async () => {
     try {
-      const { data } = await api.put('/events/${id}', { status: 'Published' }, {
+      const { data } = await api.put(`/events/${id}`, { status: 'Published' }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setEvent(data);
       
       // Fetch participants immediately after publishing just in case
-      const partRes = await api.get('/events/${id}/participants', {
+      const partRes = await api.get(`/events/${id}/participants`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setParticipants(partRes.data);
@@ -59,7 +59,7 @@ const OrganizerEventDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this draft? This cannot be undone.')) {
       try {
-        await api.delete('/events/${id}', {
+        await api.delete(`/events/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         navigate('/dashboard');

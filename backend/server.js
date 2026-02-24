@@ -18,7 +18,7 @@ const app = express();
 app.use(express.json()); // to recieve and send data in jsons (middleware)
 // to allow frontend-backend communication
 app.use(cors({
-  origin: ["http://localhost:5173", "https://felicity-event-management-three.vercel.app/"],
+  origin: ["http://localhost:5173", "https://felicity-event-management-three.vercel.app"],
   credentials: true
 }));
 

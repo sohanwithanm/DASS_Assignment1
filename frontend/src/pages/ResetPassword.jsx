@@ -25,7 +25,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const { data } = await api.put('/auth/resetpassword/${resettoken}', { password });
+      const { data } = await api.put(`/auth/resetpassword/${resettoken}`, { password });
       setMessage(data.message || 'Password reset successful!');
       
       // Give them a moment to read the success message, then route to login

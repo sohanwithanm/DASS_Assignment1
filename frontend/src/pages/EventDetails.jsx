@@ -24,7 +24,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const { data } = await api.get('/events/${id}');
+        const { data } = await api.get(`/events/${id}`);
         setEvent(data);
         
         // Initialize custom form responses if applicable
@@ -77,7 +77,7 @@ const EventDetails = () => {
         quantity: quantity
       };
 
-      await api.post('/events/${id}/register', payload, {
+      await api.post(`/events/${id}/register`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

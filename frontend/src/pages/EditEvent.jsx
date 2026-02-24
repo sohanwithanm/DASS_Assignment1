@@ -28,7 +28,7 @@ const EditEvent = () => {
 
     const fetchEvent = async () => {
       try {
-        const { data } = await api.get('/events/${id}');
+        const { data } = await api.get(`/events/${id}`);
         const formatForInput = (dateString) => new Date(dateString).toISOString().slice(0, 16);
 
         // Store the status and original constraints
@@ -116,7 +116,7 @@ const EditEvent = () => {
     }
 
     try {
-      await api.put('/events/${id}', payload, {
+      await api.put(`/events/${id}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate(`/organizer/event/${id}`); 
@@ -129,7 +129,7 @@ const EditEvent = () => {
   const handleCloseRegistrations = async () => {
     if (window.confirm("Are you sure you want to close registrations early? This cannot be undone.")) {
       try {
-        await api.put('/events/${id}', { status: 'Closed' }, {
+        await api.put(`/events/${id}`, { status: 'Closed' }, {
           headers: { Authorization: `Bearer ${token}` }
         });
         navigate(`/organizer/event/${id}`);
