@@ -1,27 +1,36 @@
-# Felicity Event Management System
+Felicity Event Management System
 
-A full-stack MERN application designed to manage campus-wide events, club memberships, and merchandise sales.
+Project Overview:
+This project is a full-stack MERN application designed for managing campus events. It allows students to view and register for events while providing club organizers and admins with tools to create and manage them.
 
-## System Overview
-The platform facilitates a three-tier user hierarchy:
-* **Admin**: Oversees platform integrity, manages club accounts, and handles manual password resets for organizers.
-* **Organizer**: Manages event lifecycles (Draft/Published/Closed), defines custom registration forms, and exports participant data.
-* **Participant**: Browses events, follows specific clubs, and manages personal event registrations.
+Deployment Links:
+Frontend URL: https://felicity-event-management-three.vercel.app
 
-## Key Features
-* **Role-Based Access Control (RBAC)**: Secure routing and API protection ensuring users only access permitted modules.
-* **Dynamic Form Builder**: Organizers can define custom fields (text, dropdown, checkbox) for event-specific registration requirements.
-* **Dual Event Architecture**: Support for both standard events and merchandise-based sales with stock management.
-* **Follow System**: Persistent club-following logic for participants to track specific campus organizers.
+Backend URL: https://felicity-event-management-oqqg.onrender.com
 
-## Design Choices & Implementation
-* **State Management**: Utilizes React Hooks (`useState`, `useEffect`) and `localStorage` for session persistence.
-* **Navigation Architecture**: Implemented a dynamic Navbar that triggers re-renders on URL changes via `useLocation` to ensure immediate UI updates upon login/logout.
-* **Strict Editing Policy**: Published events enforce data integrity by locking core fields while allowing extensions to deadlines and capacity.
-* **Optimistic UI Updates**: Used for the follow/unfollow toggle to provide an instantaneous user experience while background API calls sync with the database.
+Technical Implementation:
+-> The frontend is built using React.js and is hosted on Vercel.
 
-## Tech Stack
-* **Frontend**: React.js, React Router
-* **Backend**: Node.js, Express.js
-* **Database**: MongoDB (Mongoose ODM)
-* **Auth**: JSON Web Tokens (JWT)
+-> The backend is a Node.js and Express server hosted on Render.
+
+-> The database is a MongoDB Atlas cloud cluster.
+
+-> A centralized api.js file handles requests and switches between localhost and the production Render URL.
+
+-> User authentication and role-based access control are handled via JWT (JSON Web Tokens).
+
+Design Assumptions:
+-> Users are assumed to have a stable internet connection to interact with the MongoDB cloud database.
+
+-> The system assumes three user roles (Participant, Organizer, and Admin) with distinct permission levels.
+
+-> It is assumed and accepted that the first request may take 30-50 seconds to wake up the server due to Render’s free tier.
+
+-> Event images are assumed to be managed via external URLs to maintain deployment efficiency.
+
+Implementation Details:
+-> The backend server.js is configured with a CORS policy to explicitly allow requests from the Vercel domain.
+
+-> Sensitive data like the MongoDB connection string and JWT secrets are managed via platform environment variables rather than hardcoded files.
+
+-> Navigation between the login, registration, and dashboards is managed by React Router.
